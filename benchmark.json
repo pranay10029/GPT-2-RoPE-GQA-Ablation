@@ -1,0 +1,123 @@
+{
+  "setup": {
+    "data": "TinyStories",
+    "train_tokens": 466752940,
+    "vocab": 8192,
+    "tokenizer": "custom byte-level BPE",
+    "tokenizer_sha256_16": "87302aa2fe41fad2",
+    "n_layer": 8,
+    "n_head": 8,
+    "n_embd": 512,
+    "head_dim": 64,
+    "block_size": 512,
+    "batch": 32,
+    "iters": 36621,
+    "tokens_seen": 600000000,
+    "gpu": "Tesla T4",
+    "torch": "2.10.0+cu128",
+    "sdpa_enable_gqa": true,
+    "metric": "bits-per-byte (vocab changed, so perplexity is not comparable)"
+  },
+  "rows": {
+    "baseline": {
+      "pos": "learned",
+      "n_kv_heads": 8,
+      "mlp_ratio": 4.0,
+      "params": 29676544,
+      "val_bpb": 0.4814,
+      "kv_cache_MB_at_2048": 33.554432,
+      "max_context": 512
+    },
+    "rope": {
+      "pos": "rope",
+      "n_kv_heads": 8,
+      "mlp_ratio": 4.0,
+      "params": 29414400,
+      "val_bpb": 0.4733,
+      "kv_cache_MB_at_2048": 33.554432,
+      "max_context": 4096
+    },
+    "rope_gqa": {
+      "pos": "rope",
+      "n_kv_heads": 2,
+      "mlp_ratio": 4.0,
+      "params": 26262528,
+      "val_bpb": 0.4783,
+      "kv_cache_MB_at_2048": 8.388608,
+      "max_context": 4096
+    }
+  },
+  "decode_sweep": [
+    {
+      "batch": 1,
+      "ctx": 512,
+      "mha_cache_GB": 0.01,
+      "gqa_cache_GB": 0.0,
+      "mha_steps_s": 170.7,
+      "gqa_steps_s": 140.7,
+      "mha_tok_s": 171,
+      "gqa_tok_s": 141,
+      "gqa_speedup": 0.824
+    },
+    {
+      "batch": 1,
+      "ctx": 2048,
+      "mha_cache_GB": 0.03,
+      "gqa_cache_GB": 0.01,
+      "mha_steps_s": 177.3,
+      "gqa_steps_s": 138.6,
+      "mha_tok_s": 177,
+      "gqa_tok_s": 139,
+      "gqa_speedup": 0.782
+    },
+    {
+      "batch": 16,
+      "ctx": 512,
+      "mha_cache_GB": 0.13,
+      "gqa_cache_GB": 0.03,
+      "mha_steps_s": 152.5,
+      "gqa_steps_s": 143.2,
+      "mha_tok_s": 2440,
+      "gqa_tok_s": 2291,
+      "gqa_speedup": 0.939
+    },
+    {
+      "batch": 16,
+      "ctx": 2048,
+      "mha_cache_GB": 0.54,
+      "gqa_cache_GB": 0.13,
+      "mha_steps_s": 48.6,
+      "gqa_steps_s": 64.5,
+      "mha_tok_s": 778,
+      "gqa_tok_s": 1033,
+      "gqa_speedup": 1.327
+    },
+    {
+      "batch": 64,
+      "ctx": 512,
+      "mha_cache_GB": 0.54,
+      "gqa_cache_GB": 0.13,
+      "mha_steps_s": 46.7,
+      "gqa_steps_s": 60.4,
+      "mha_tok_s": 2989,
+      "gqa_tok_s": 3869,
+      "gqa_speedup": 1.293
+    },
+    {
+      "batch": 64,
+      "ctx": 2048,
+      "mha_cache_GB": 2.15,
+      "gqa_cache_GB": 0.54,
+      "mha_steps_s": 13.2,
+      "gqa_steps_s": 18.0,
+      "mha_tok_s": 845,
+      "gqa_tok_s": 1150,
+      "gqa_speedup": 1.364
+    }
+  ],
+  "caveats": [
+    "baseline ran before the batch-order fix, so its bpb carries a small data-order confound",
+    "rope_gqa has 3.15M fewer params than rope (smaller k/v projections); the param-matched control (mlp_ratio 4.75) was not run",
+    "600M tokens over a 466.75M-token corpus = 1.29 epochs, identical across rows"
+  ]
+}

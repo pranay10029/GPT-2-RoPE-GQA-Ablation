@@ -1,0 +1,5 @@
+torch>=2.5
+numpy
+tokenizers
+datasets
+matplotlib
