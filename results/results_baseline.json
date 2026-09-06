@@ -1,0 +1,22 @@
+{
+  "run": "baseline",
+  "params": 29676544,
+  "best_bpb": 0.4813687557171422,
+  "n_kv_heads": 8,
+  "ctx": {
+    "256": {
+      "kv_cache_MB": 4.194304,
+      "prefill_s": 0.005978822708129883,
+      "decode_tok_s": 234.34740032275258
+    },
+    "1024": {
+      "kv_cache_MB": 16.777216,
+      "prefill_s": 0.009803533554077148,
+      "error": "learned positional embedding table holds 512 positions; asked for 513. This model cannot run past its training"
+    },
+    "2048": {
+      "kv_cache_MB": 33.554432,
+      "error": "learned positional embedding table holds 512 positions; asked for 1024. This model cannot run past its trainin"
+    }
+  }
+}
